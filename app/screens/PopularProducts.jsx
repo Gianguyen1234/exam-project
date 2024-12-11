@@ -1,7 +1,6 @@
 import React from "react";
 import { View, Text, StyleSheet, Image, FlatList } from "react-native";
 
-// Example data for popular products
 const popularProducts = [
   {
     id: "1",

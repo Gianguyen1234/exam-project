@@ -1,6 +1,13 @@
 import React from "react";
-import StartScreen from "./screens/StartScreen";
+import { View } from "react-native";
+import StartScreen from "./screens/StartScreen"; 
+import PopularProducts from "./screens/PopularProducts"; 
 
 export default function Index() {
-  return <StartScreen />;
+  return (
+    <View style={{ flex: 1 }}>
+      <StartScreen />
+      <PopularProducts /> 
+    </View>
+  );
 }

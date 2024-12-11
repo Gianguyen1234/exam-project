@@ -1,14 +1,19 @@
-import React from "react";
-import { View } from "react-native";
-import StartScreen from "./screens/StartScreen";
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import StartScreen from './screens/StartScreen';  
+import ShowScreen from './screens/ShowScreen';  
+import PopularProducts from './screens/PopularProducts';  
 
-import PopularProducts from "./screens/PopularProducts"; 
+const Stack = createStackNavigator();
 
-export default function Index() {
+export default function App() {
   return (
-    <View style={{ flex: 1 }}>
-      <StartScreen navigation={undefined} />
-      <PopularProducts />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="StartScreen">
+        <Stack.Screen name="StartScreen" component={StartScreen} />
+        <Stack.Screen name="ShowScreen" component={ShowScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }

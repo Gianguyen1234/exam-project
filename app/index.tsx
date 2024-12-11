@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';  // Import useRouter for programmatic navigation
+import PopularProducts from './PopularProducts';  // Import the PopularProducts component
 
 export default function StartScreen() {
   const router = useRouter();  // Initialize the router
@@ -11,15 +12,12 @@ export default function StartScreen() {
       
       {/* Button for navigating to Show Screen */}
       <Button
-        title="Go to Show Screen"
-        onPress={() => router.push('/screens/ShowScreen')}  // Use the router to navigate
+        title="Go to Catalog"
+        onPress={() => router.push('/ShowScreen')}  // Navigate to '/ShowScreen' instead of '/show-screen'
       />
-      
-      {/* Button for navigating to Popular Products */}
-      <Button
-        title="View Popular Products"
-        onPress={() => router.push('/screens/PopularProducts')}  // Use the router to navigate
-      />
+
+      {/* Display Popular Products directly on the Start Screen */}
+      <PopularProducts />
     </View>
   );
 }

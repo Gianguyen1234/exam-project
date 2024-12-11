@@ -36,6 +36,8 @@ const PopularProducts = () => {
             <Text style={styles.price}>{item.price}</Text>
           </View>
         )}
+        horizontal={true} 
+        showsHorizontalScrollIndicator={false} 
       />
     </View>
   );
@@ -53,7 +55,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   itemContainer: {
-    marginBottom: 20,
+    marginRight: 15, 
     backgroundColor: "#fff",
     padding: 10,
     borderRadius: 8,
@@ -63,7 +65,7 @@ const styles = StyleSheet.create({
     shadowRadius: 5,
   },
   image: {
-    width: "100%",
+    width: 150,
     height: 150,
     borderRadius: 8,
     marginBottom: 10,
@@ -75,7 +77,7 @@ const styles = StyleSheet.create({
   price: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#27ae60",
+    color: "#27ae60", 
   },
 });
 

@@ -1,11 +1,13 @@
 import React from "react";
 import { View, Text, Button, StyleSheet } from "react-native";
 
-const StartScreen = () => {
+const StartScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Renovate Your Interior</Text>
-      <Button title="Go to catalog" />
+      <Button
+        title="Go to catalog"       
+      />
     </View>
   );
 };

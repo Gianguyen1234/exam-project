@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, TouchableOpacity, Dimensions } from 'react-native';
+import { useRouter } from 'expo-router';
 import axios from 'axios';
 
 export default function ShowScreen() {
   const [products, setProducts] = useState([]);
   const [numColumns, setNumColumns] = useState(2); // Default to 2 columns
+  const router = useRouter();  // Use the router from expo-router
 
   // Detect screen width to adjust columns dynamically
   useEffect(() => {
@@ -29,6 +31,13 @@ export default function ShowScreen() {
         console.error('Error fetching products:', error);
       });
   }, []);
+
+  const handleHomeNavigation = () => {
+    router.push('/'); // Navigate to the home screen
+  };
+  // const handleCartNavigation = () => {
+  //   router.push('/CartScreen'); 
+  // };
 
   return (
     <View style={styles.container}>
@@ -57,13 +66,13 @@ export default function ShowScreen() {
       />
 
       <View style={styles.footer}>
-        <TouchableOpacity style={styles.footerButton}>
+        <TouchableOpacity style={styles.footerButton} onPress={handleHomeNavigation}>
           <Text style={styles.footerText}>Home</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerButton}>
           <Text style={styles.footerText}>Search</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.footerButton}>
+        <TouchableOpacity style={styles.footerButton}  onPress={() => router.push(`/CartScreen`)}>
           <Text style={styles.footerText}>Cart</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.footerButton}>

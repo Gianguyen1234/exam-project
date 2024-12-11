@@ -9,11 +9,11 @@ const products = [
     price: '$599',
     image: 'https://images.pexels.com/photos/133919/pexels-photo-133919.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
   },
-  { id: '2', name: 'Wooden Dining Table', price: '$299', image: 'https://via.placeholder.com/150' },
-  { id: '3', name: 'Lamp Light', price: '$49', image: 'https://via.placeholder.com/150' },
-  { id: '4', name: 'Coffee Table', price: '$159', image: 'https://via.placeholder.com/150' },
-  { id: '5', name: 'Chair', price: '$89', image: 'https://via.placeholder.com/150' },
-  { id: '6', name: 'Bookshelf', price: '$149', image: 'https://via.placeholder.com/150' },
+  { id: '2', name: 'Wooden Dining Table', price: '$299', image: 'https://images.pexels.com/photos/2092058/pexels-photo-2092058.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
+  { id: '3', name: 'Lamp Light', price: '$49', image: 'https://images.pexels.com/photos/5490911/pexels-photo-5490911.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
+  { id: '4', name: 'Coffee Table', price: '$159', image: 'https://images.pexels.com/photos/27548805/pexels-photo-27548805/free-photo-of-a-cup-of-coffee-and-a-cookie-on-a-wooden-table.jpeg' },
+  { id: '5', name: 'Chair', price: '$89', image: 'https://images.pexels.com/photos/2082090/pexels-photo-2082090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
+  { id: '6', name: 'Bookshelf', price: '$149', image: 'https://images.pexels.com/photos/2177482/pexels-photo-2177482.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
 ];
 
 export default function PopularProducts() {
@@ -51,7 +51,7 @@ export default function PopularProducts() {
             {/* Buy Now Button */}
             <TouchableOpacity
               style={styles.buyNowButton}
-              onPress={() => router.push(`/CartScreen`)} // Navigate to CartScreen with product id
+              onPress={() => router.push(`/CartScreen`)}
             >
               <Text style={styles.buyNowButtonText}>Buy Now</Text>
             </TouchableOpacity>

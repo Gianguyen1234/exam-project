@@ -13,17 +13,17 @@ export default function ShowScreen() {
       const screenWidth = Dimensions.get('window').width;
       setNumColumns(screenWidth < 768 ? 2 : 3);
     };
-  
+
     // Initial setup
     updateColumns();
-  
+
     // Subscribe to changes
     const subscription = Dimensions.addEventListener('change', updateColumns);
-  
+
     // Cleanup subscription
     return () => subscription?.remove();
   }, []);
-  
+
   // Fetch products from MockAPI
   useEffect(() => {
     axios.get('https://6724468e493fac3cf24db97b.mockapi.io/products')
@@ -37,6 +37,10 @@ export default function ShowScreen() {
 
   const handleHomeNavigation = () => {
     router.push('/'); // Navigate to the home screen
+  };
+
+  const handleBuyNow = (productName) => {
+    alert(`${productName} has been purchased!`);
   };
 
   return (
@@ -58,9 +62,15 @@ export default function ShowScreen() {
         key={numColumns} // Force re-render when numColumns changes
         renderItem={({ item }) => (
           <View style={styles.productContainer}>
+            <View style={styles.discountBadge}>
+              <Text style={styles.discountText}>20% OFF</Text>
+            </View>
             <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
             <Text style={styles.productName}>{item.name}</Text>
             <Text style={styles.productPrice}>${item.price}</Text>
+            <TouchableOpacity style={styles.buyButton} onPress={() => handleBuyNow(item.name)}>
+              <Text style={styles.buyButtonText}>Buy Now</Text>
+            </TouchableOpacity>
           </View>
         )}
       />
@@ -105,26 +115,24 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 12,
     paddingHorizontal: 8,
-    backgroundColor: '#37474F', // Modern, sleek, dark slate gray
-    borderRadius: 12, 
+    backgroundColor: '#37474F',
+    borderRadius: 12,
     marginHorizontal: 5,
-    elevation: 6, // Shadow for Android
-    shadowColor: '#000', 
+    elevation: 6,
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3, // Subtle but noticeable shadow
-    shadowRadius: 5, 
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
     alignItems: 'center',
     justifyContent: 'center',
     overflow: 'hidden',
   },
-  
   categoryText: {
-    color: '#ECEFF1', // Soft, near-white for contrast
-    fontWeight: 'bold', 
+    color: '#ECEFF1',
+    fontWeight: 'bold',
     textAlign: 'center',
-    fontSize: 16, // Refined text size
+    fontSize: 16,
   },
-    
   productContainer: {
     flex: 1,
     margin: 10,
@@ -137,6 +145,21 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 5 },
     elevation: 5,
     padding: 10,
+  },
+  discountBadge: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    backgroundColor: '#FF5722',
+    paddingVertical: 5,
+    paddingHorizontal: 10,
+    borderRadius: 5,
+    zIndex: 1,
+  },
+  discountText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    fontSize: 12,
   },
   productImage: {
     width: '100%',
@@ -152,49 +175,55 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   productPrice: {
-    fontSize: 18, // Slightly larger to catch attention
-    fontWeight: '600', // Semi-bold for emphasis
-    color: '#FF5722', // Modern, vibrant orange (contrasts nicely with gray tones)
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#FF5722',
     textAlign: 'center',
-    marginTop: 5, // Adds a little space between price and product name
-    paddingHorizontal: 8, // Adds some padding for spacing
-    textTransform: 'uppercase', // Gives it a clean, modern feel
-    letterSpacing: 1.2, // A bit of spacing for clarity and style
+    marginTop: 5,
+  },
+  buyButton: {
+    backgroundColor: '#007BFF',
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    marginTop: 10,
+  },
+  buyButtonText: {
+    color: '#fff',
+    fontWeight: '600',
+    fontSize: 16,
   },
   footer: {
     flexDirection: 'row',
-    justifyContent: 'space-evenly', // Evenly spaced buttons for symmetry
-    paddingVertical: 12, // Increased vertical padding for better spacing
-    backgroundColor: '#F8F8F8', // Light neutral background for a modern feel
-    borderTopWidth: 0.5, // Subtle divider line
-    borderTopColor: '#E0E0E0', // Soft, light border for separation
+    justifyContent: 'space-evenly',
+    paddingVertical: 12,
+    backgroundColor: '#F8F8F8',
+    borderTopWidth: 0.5,
+    borderTopColor: '#E0E0E0',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 }, // Shadow above for floating effect
-    shadowOpacity: 0.1, // Subtle shadow for depth
+    shadowOffset: { width: 0, height: -2 },
+    shadowOpacity: 0.1,
     shadowRadius: 4,
-    elevation: 3, // Android shadow
+    elevation: 3,
   },
-  
   footerButton: {
     alignItems: 'center',
-    justifyContent: 'center', // Center content vertically and horizontally
-    paddingVertical: 8, // Add vertical padding for better button touch target
-    paddingHorizontal: 15, // Horizontal padding for wider buttons
-    backgroundColor: '#ffffff', // White background for buttons
-    borderRadius: 30, // Rounded buttons for a modern appearance
-    elevation: 4, // Elevation for a subtle shadow effect
-    shadowColor: '#ddd', // Shadow for buttons on iOS
+    justifyContent: 'center',
+    paddingVertical: 8,
+    paddingHorizontal: 15,
+    backgroundColor: '#ffffff',
+    borderRadius: 30,
+    elevation: 4,
+    shadowColor: '#ddd',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
   },
-  
   footerText: {
-    color: '#333', // Darker text color for better readability
+    color: '#333',
     fontSize: 16,
-    fontWeight: '600', // Semi-bold text for better legibility
-    textTransform: 'capitalize', // Ensure the text is nicely presented
-    letterSpacing: 1, // Subtle letter spacing for clean text
-  }
-  
+    fontWeight: '600',
+    textTransform: 'capitalize',
+    letterSpacing: 1,
+  },
 });

@@ -5,7 +5,7 @@ import { useRouter } from 'expo-router';
 export default function DetailScreen() {
   const [quantity, setQuantity] = useState(1);
   const [comment, setComment] = useState('');
-  const [rating, setRating] = useState(0); // Store rating from 0 to 5
+  const [rating, setRating] = useState(0);
   const [comments, setComments] = useState([]);
   const router = useRouter();
 
@@ -14,6 +14,7 @@ export default function DetailScreen() {
     name: 'Modern Sofa',
     description: 'A stylish and comfortable sofa for your living room. Perfect for relaxing and entertaining.',
     price: '$599',
+    discount: '20% OFF', // New discount field
     image: 'https://images.pexels.com/photos/133919/pexels-photo-133919.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
     rating: 4.5,
     reviews: 120,
@@ -23,18 +24,19 @@ export default function DetailScreen() {
     alert(`${product.name} has been added to the cart!`);
   };
 
+
   const handleGoBack = () => {
-    router.back(); // Navigate back to the previous screen
+    router.back();
   };
 
   const handleAddComment = () => {
     if (comment.trim() && rating > 0) {
       setComments([
         ...comments,
-        { text: comment, rating: rating }, // Store both comment and rating
+        { text: comment, rating: rating },
       ]);
-      setComment(''); // Clear the input field after submission
-      setRating(0); // Reset rating after submission
+      setComment('');
+      setRating(0);
     } else {
       alert("Please enter a comment and select a rating.");
     }
@@ -54,7 +56,11 @@ export default function DetailScreen() {
         <Text style={styles.backButtonText}>← Back</Text>
       </TouchableOpacity>
 
-      <Image source={{ uri: product.image }} style={styles.productImage} />
+      <View style={styles.imageContainer}>
+        <Image source={{ uri: product.image }} style={styles.productImage} />
+        <Text style={styles.discountLabel}>{product.discount}</Text>
+      </View>
+
       <Text style={styles.productName}>{product.name}</Text>
       <Text style={styles.productPrice}>{product.price}</Text>
       <Text style={styles.productDescription}>{product.description}</Text>
@@ -95,14 +101,12 @@ export default function DetailScreen() {
         <Text style={styles.addToCartButtonText}>Add to Cart</Text>
       </TouchableOpacity>
 
+
       {/* Feedback Section (Comments + Star Rating) */}
       <View style={styles.commentSection}>
         <Text style={styles.commentTitle}>Leave a Comment:</Text>
 
-        {/* Star Rating Input */}
-        <View style={styles.starRatingContainer}>
-          {renderStars(5)} {/* Display 5 stars */}
-        </View>
+        <View style={styles.starRatingContainer}>{renderStars(5)}</View>
 
         <TextInput
           style={styles.commentInput}
@@ -114,15 +118,12 @@ export default function DetailScreen() {
           <Text style={styles.addCommentButtonText}>Add Comment</Text>
         </TouchableOpacity>
 
-        {/* Displaying comments with ratings */}
         <FlatList
           data={comments}
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item }) => (
             <View style={styles.commentCard}>
-              <View style={styles.ratingStars}>
-                {renderStars(item.rating)} {/* Display rating stars */}
-              </View>
+              <View style={styles.ratingStars}>{renderStars(item.rating)}</View>
               <Text style={styles.commentText}>{item.text}</Text>
             </View>
           )}
@@ -138,7 +139,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#f5f5f5',
     paddingTop: 40,
     paddingHorizontal: 20,
-    paddingBottom: 20, // Add padding at the bottom for smooth scrolling
+    paddingBottom: 20,
   },
   backButton: {
     marginBottom: 20,
@@ -148,11 +149,26 @@ const styles = StyleSheet.create({
     color: '#007BFF',
     fontWeight: '600',
   },
+  imageContainer: {
+    position: 'relative',
+  },
   productImage: {
     width: '100%',
     height: 300,
     borderRadius: 10,
     marginBottom: 20,
+  },
+  discountLabel: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    backgroundColor: 'red',
+    color: 'white',
+    paddingHorizontal: 8,
+    paddingVertical: 4,
+    borderRadius: 5,
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   productName: {
     fontSize: 24,

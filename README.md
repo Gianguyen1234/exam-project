@@ -1,5 +1,5 @@
 # Welcome to my first React Native Expo app 👋
-# If you use my project, don't forget to give it a star ⭐ 
+# If you like my project, don't forget to give it a star ⭐ 
 ## Your support means a lot and helps others discover this project. Thank you! 😊
 
 ![image](https://github.com/user-attachments/assets/e85b1569-7eec-427d-b8b4-7e89b895908d)

@@ -34,30 +34,32 @@ export default function PopularProducts() {
     };
   }, []);
 
+  const renderItem = ({ item }) => (
+    <View style={[styles.itemContainer, isMobile ? styles.mobileItemContainer : styles.webItemContainer]}>
+      <Image source={{ uri: item.image }} style={[styles.itemImage, isMobile ? styles.mobileItemImage : styles.webItemImage]} />
+      <Text style={styles.itemName}>{item.name}</Text>
+      <Text style={styles.itemPrice}>{item.price}</Text>
+      <TouchableOpacity style={styles.buyNowButton} onPress={() => router.push(`/CartScreen`)}>
+        <Text style={styles.buyNowButtonText}>Buy Now</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Popular Products</Text>
       <FlatList
+        key={isMobile ? 'mobile' : 'web'}
         data={products}
         keyExtractor={(item) => item.id}
+        numColumns={isMobile ? 1 : 3}
         horizontal={isMobile} // Enable horizontal scrolling for mobile
         showsHorizontalScrollIndicator={false}
-        renderItem={({ item }) => (
-          <View style={[styles.itemContainer, isMobile ? styles.mobileItemContainer : null]}>
-            <Image source={{ uri: item.image }} style={[styles.itemImage, isMobile ? styles.mobileItemImage : null]} />
-            <Text style={styles.itemName}>{item.name}</Text>
-            <Text style={styles.itemPrice}>{item.price}</Text>
-
-            {/* Buy Now Button */}
-            <TouchableOpacity
-              style={styles.buyNowButton}
-              onPress={() => router.push(`/CartScreen`)}
-            >
-              <Text style={styles.buyNowButtonText}>Buy Now</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-        contentContainerStyle={isMobile && styles.mobileContentContainer} // Adjust padding for mobile layout
+        renderItem={renderItem}
+        contentContainerStyle={isMobile ? styles.mobileContentContainer : styles.webContentContainer}
+        snapToAlignment="center"
+        snapToInterval={Dimensions.get('window').width * 0.8 + 10} // Snap each item into view
+        decelerationRate="fast" // Smooth snapping
       />
     </View>
   );
@@ -88,10 +90,13 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderWidth: 1,
     borderColor: '#ddd',
+    padding: 10,
   },
   mobileItemContainer: {
-    width: Dimensions.get('window').width * 0.8, // 80% of screen width
-    marginRight: 15,
+    width: Dimensions.get('window').width * 0.8, // 80% of screen width for mobile
+  },
+  webItemContainer: {
+    width: Dimensions.get('window').width / 3 - 30, // Divide screen into 3 columns with spacing
   },
   itemImage: {
     width: '100%',
@@ -100,13 +105,17 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 12,
   },
   mobileItemImage: {
-    height: 200, // Taller image for mobile
+    height: 200,
+  },
+  webItemImage: {
+    height: 150,
   },
   itemName: {
     fontSize: 16,
     fontWeight: 'bold',
     color: '#333',
     marginVertical: 5,
+    textAlign: 'center',
   },
   itemPrice: {
     fontSize: 14,
@@ -115,6 +124,10 @@ const styles = StyleSheet.create({
   },
   mobileContentContainer: {
     paddingLeft: 10,
+  },
+  webContentContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   buyNowButton: {
     backgroundColor: '#007BFF',

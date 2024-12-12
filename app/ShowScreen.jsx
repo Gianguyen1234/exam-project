@@ -8,18 +8,22 @@ export default function ShowScreen() {
   const [numColumns, setNumColumns] = useState(2); // Default to 2 columns
   const router = useRouter();  // Use the router from expo-router
 
-  // Detect screen width to adjust columns dynamically
   useEffect(() => {
     const updateColumns = () => {
       const screenWidth = Dimensions.get('window').width;
       setNumColumns(screenWidth < 768 ? 2 : 3);
     };
-    
+  
+    // Initial setup
     updateColumns();
-    Dimensions.addEventListener('change', updateColumns);
-    
-    return () => Dimensions.removeEventListener('change', updateColumns);
+  
+    // Subscribe to changes
+    const subscription = Dimensions.addEventListener('change', updateColumns);
+  
+    // Cleanup subscription
+    return () => subscription?.remove();
   }, []);
+  
 
   // Fetch products from MockAPI
   useEffect(() => {
@@ -35,9 +39,6 @@ export default function ShowScreen() {
   const handleHomeNavigation = () => {
     router.push('/'); // Navigate to the home screen
   };
-  // const handleCartNavigation = () => {
-  //   router.push('/CartScreen'); 
-  // };
 
   return (
     <View style={styles.container}>

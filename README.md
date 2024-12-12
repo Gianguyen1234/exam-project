@@ -1,6 +1,11 @@
-# Welcome to your Expo app 👋
+# Welcome to my first React Native Expo app 👋
+# If you use my project, don't forget to give it a star ⭐ 
+## Your support means a lot and helps others discover this project. Thank you! 😊
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+![image](https://github.com/user-attachments/assets/e85b1569-7eec-427d-b8b4-7e89b895908d)
+
+## Watch Demo
+- The demo video will release soon
 
 ## Get started
 

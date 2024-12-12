@@ -20,6 +20,7 @@ export default function PopularProducts() {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(true);
 
+  
   useEffect(() => {
     const updateLayout = () => {
       const screenWidth = Dimensions.get('window').width;
@@ -27,10 +28,11 @@ export default function PopularProducts() {
     };
 
     updateLayout();
-    Dimensions.addEventListener('change', updateLayout);
+    const listener = Dimensions.addEventListener('change', updateLayout); // addEventListener returns a listener
 
+    // Cleanup function to remove listener
     return () => {
-      Dimensions.removeEventListener('change', updateLayout);
+      listener.remove(); // Correct way to remove the listener
     };
   }, []);
 

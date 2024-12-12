@@ -104,16 +104,28 @@ const styles = StyleSheet.create({
   },
   categoryButton: {
     flex: 1,
-    padding: 10,
-    backgroundColor: '#007BFF',
-    borderRadius: 8,
+    paddingVertical: 12,
+    paddingHorizontal: 8,
+    backgroundColor: '#37474F', // Modern, sleek, dark slate gray
+    borderRadius: 12, 
     marginHorizontal: 5,
+    elevation: 6, // Shadow for Android
+    shadowColor: '#000', 
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3, // Subtle but noticeable shadow
+    shadowRadius: 5, 
+    alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
+  
   categoryText: {
-    color: '#fff',
-    fontWeight: 'bold',
+    color: '#ECEFF1', // Soft, near-white for contrast
+    fontWeight: 'bold', 
     textAlign: 'center',
+    fontSize: 16, // Refined text size
   },
+    
   productContainer: {
     flex: 1,
     margin: 10,
@@ -141,25 +153,49 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   productPrice: {
-    fontSize: 16,
-    color: '#007BFF',
+    fontSize: 18, // Slightly larger to catch attention
+    fontWeight: '600', // Semi-bold for emphasis
+    color: '#FF5722', // Modern, vibrant orange (contrasts nicely with gray tones)
     textAlign: 'center',
+    marginTop: 5, // Adds a little space between price and product name
+    paddingHorizontal: 8, // Adds some padding for spacing
+    textTransform: 'uppercase', // Gives it a clean, modern feel
+    letterSpacing: 1.2, // A bit of spacing for clarity and style
   },
   footer: {
     flexDirection: 'row',
-    justifyContent: 'space-around',
-    paddingVertical: 10,
-    backgroundColor: '#fff',
-    borderTopWidth: 1,
-    borderTopColor: '#ddd',
+    justifyContent: 'space-evenly', // Evenly spaced buttons for symmetry
+    paddingVertical: 12, // Increased vertical padding for better spacing
+    backgroundColor: '#F8F8F8', // Light neutral background for a modern feel
+    borderTopWidth: 0.5, // Subtle divider line
+    borderTopColor: '#E0E0E0', // Soft, light border for separation
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -2 }, // Shadow above for floating effect
+    shadowOpacity: 0.1, // Subtle shadow for depth
+    shadowRadius: 4,
+    elevation: 3, // Android shadow
   },
+  
   footerButton: {
     alignItems: 'center',
-    flex: 1,
+    justifyContent: 'center', // Center content vertically and horizontally
+    paddingVertical: 8, // Add vertical padding for better button touch target
+    paddingHorizontal: 15, // Horizontal padding for wider buttons
+    backgroundColor: '#ffffff', // White background for buttons
+    borderRadius: 30, // Rounded buttons for a modern appearance
+    elevation: 4, // Elevation for a subtle shadow effect
+    shadowColor: '#ddd', // Shadow for buttons on iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
   },
+  
   footerText: {
-    color: '#007BFF',
+    color: '#333', // Darker text color for better readability
     fontSize: 16,
-    fontWeight: 'bold',
-  },
+    fontWeight: '600', // Semi-bold text for better legibility
+    textTransform: 'capitalize', // Ensure the text is nicely presented
+    letterSpacing: 1, // Subtle letter spacing for clean text
+  }
+  
 });

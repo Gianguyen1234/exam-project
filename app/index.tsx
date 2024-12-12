@@ -7,12 +7,10 @@ import store from './redux/store';
 
 export default function StartScreen() {
   const router = useRouter();
-
   return (
     <Provider store={store}>
       <View style={styles.container}>
-        <Text style={styles.title}>Renovate Your Interior</Text>
-        
+        <Text style={styles.title}>Renovate Your Interior</Text>        
         {/* Buttons with modern UI */}
         <TouchableOpacity
           style={styles.button}
@@ -30,7 +28,6 @@ export default function StartScreen() {
     </Provider>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

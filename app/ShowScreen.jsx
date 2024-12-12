@@ -24,7 +24,6 @@ export default function ShowScreen() {
     return () => subscription?.remove();
   }, []);
   
-
   // Fetch products from MockAPI
   useEffect(() => {
     axios.get('https://6724468e493fac3cf24db97b.mockapi.io/products')

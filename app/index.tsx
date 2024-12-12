@@ -40,12 +40,18 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 32,
-    fontWeight: 'bold',
+    fontSize: 36,  // Larger font size for a strong presence
+    fontFamily: 'Montserrat',  // Modern sans-serif font
+    fontWeight: '900',  // Bolder font weight for impact
     marginBottom: 40,
-    color: '#2C3E50',
+    color: '#333',  // Dark gray for a neutral, modern look
     textAlign: 'center',
-  },
+    letterSpacing: 1.2,  // Slight spacing for a clean, modern appearance
+    textTransform: 'uppercase',  // Adds an elegant, structured feel
+    textShadowColor: '#BDC3C7',  // Lighter shadow color for subtle depth
+    textShadowOffset: { width: 0, height: 4 },  // Softer offset for depth
+    textShadowRadius: 8,  // Larger blur for a softer, modern shadow
+  },  
   button: {
     backgroundColor: '#3498DB',
     borderRadius: 30,

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useRouter } from 'expo-router';  
 import PopularProducts from './PopularProducts';  
 import { Provider } from 'react-redux'; 
@@ -40,27 +40,33 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 28,
+    fontSize: 32,
     fontWeight: 'bold',
-    marginBottom: 30,
-    color: '#333',
+    marginBottom: 40,
+    color: '#2C3E50',
     textAlign: 'center',
   },
   button: {
-    backgroundColor: '#007BFF',
-    borderRadius: 25,
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    marginVertical: 10,
+    backgroundColor: '#3498DB',
+    borderRadius: 30,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    marginVertical: 12,
     shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
+    shadowOpacity: 0.3,
+    shadowRadius: 15,
     shadowOffset: { width: 0, height: 5 },
-    elevation: 5,
+    elevation: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+   
   },
   buttonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  buttonHover: {
+    backgroundColor: '#2980B9',
   },
 });

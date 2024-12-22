@@ -19,7 +19,6 @@ const products = [
 export default function PopularProducts() {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(true);
-
   
   useEffect(() => {
     const updateLayout = () => {

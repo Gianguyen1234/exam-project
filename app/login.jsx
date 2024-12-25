@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
+
 
   const handleLogin = async () => {
     try {
@@ -16,28 +17,29 @@ export default function LoginScreen() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),
       });
-
+  
       if (!response.ok) {
         const errorData = await response.json();
         Alert.alert('Login Failed', errorData.message || 'Invalid credentials');
         return;
       }
-
+  
       const { token, role } = await response.json();
-
-      // Save token in SecureStore
-      await SecureStore.setItemAsync('authToken', token);
-
+  
+      // Save token in AsyncStorage
+      await AsyncStorage.setItem('authToken', token);
+  
       // Navigate based on role
       if (role === 'admin') {
-        router.push('/admin/index');
+        router.replace('/admin');
       } else {
-        router.push('/');
+        router.replace('/');
       }
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again later.');
     }
   };
+  
 
   return (
     <LinearGradient

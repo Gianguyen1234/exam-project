@@ -1,14 +1,18 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter } from 'expo-router';
 
 export default function AdminPage() {
   const router = useRouter();
 
   const handleLogout = async () => {
-    await SecureStore.deleteItemAsync('authToken');
-    router.replace('/login');
+    try {
+      await AsyncStorage.removeItem('authToken');
+      router.replace('/login');
+    } catch (error) {
+      console.error('Error clearing token:', error);
+    }
   };
 
   return (

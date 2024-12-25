@@ -1,8 +1,8 @@
-import React from 'react';
-import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, FlatList, TouchableOpacity, Image } from 'react-native';
 import { useRouter } from 'expo-router';
 
-const cartItems = [
+const initialCartItems = [
   {
     id: '1',
     name: 'Modern Sofa',
@@ -28,10 +28,35 @@ const cartItems = [
 
 export default function CartScreen() {
   const router = useRouter();
+  const [cartItems, setCartItems] = useState(initialCartItems);
 
   const handleProceedToCheckout = () => {
-    // Navigate to the checkout screen or payment page
     router.push('/CheckoutScreen');
+  };
+
+  const handleIncreaseQuantity = (id) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+      )
+    );
+  };
+
+  const handleDecreaseQuantity = (id) => {
+    setCartItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id && item.quantity > 1
+          ? { ...item, quantity: item.quantity - 1 }
+          : item
+      )
+    );
+  };
+
+  const calculateTotal = () => {
+    return cartItems.reduce(
+      (total, item) => total + parseFloat(item.price.replace('$', '')) * item.quantity,
+      0
+    );
   };
 
   const renderCartItem = ({ item }) => (
@@ -41,14 +66,19 @@ export default function CartScreen() {
         <Text style={styles.productName}>{item.name}</Text>
         <Text style={styles.productPrice}>{item.price}</Text>
         <Text style={styles.productQuantity}>Quantity: {item.quantity}</Text>
+        {/* Added controls for quantity adjustment */}
+        <View style={styles.quantityContainer}>
+          <TouchableOpacity onPress={() => handleDecreaseQuantity(item.id)}>
+            <Text style={styles.quantityButton}>-</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleIncreaseQuantity(item.id)}>
+            <Text style={styles.quantityButton}>+</Text>
+          </TouchableOpacity>
+        </View>
       </View>
       <Text style={styles.removeButton}>Remove</Text>
     </View>
   );
-
-  const calculateTotal = () => {
-    return cartItems.reduce((total, item) => total + parseFloat(item.price.replace('$', '')) * item.quantity, 0);
-  };
 
   return (
     <View style={styles.container}>
@@ -158,5 +188,16 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight: '600',
+  },
+  quantityContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+  },
+  quantityButton: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#007BFF',
+    marginHorizontal: 10,
   },
 });

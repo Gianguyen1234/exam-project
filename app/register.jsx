@@ -19,7 +19,7 @@ export default function RegisterScreen() {
   const handleRegister = async () => {
     try {
       const response = await fetch(
-        'https://furniture-api-1-8h05.onrender.com/api/register',
+        'https://furniture-api-1-8h05.onrender.com/api/auth/register',
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },

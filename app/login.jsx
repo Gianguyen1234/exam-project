@@ -30,9 +30,9 @@ export default function LoginScreen() {
 
       // Navigate based on role
       if (role === 'admin') {
-        router.replace('/admin');
+        router.push('/admin/index');
       } else {
-        router.replace('/');
+        router.push('/');
       }
     } catch (error) {
       Alert.alert('Error', 'Something went wrong. Please try again later.');

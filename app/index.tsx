@@ -23,6 +23,20 @@ export default function StartScreen() {
           <Text style={styles.buttonText}>Go to Detail Screen</Text>
         </TouchableOpacity>
 
+        {/* Buttons for Authentication */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push('/login')}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => router.push('/register')}>
+          <Text style={styles.buttonText}>Register</Text>
+        </TouchableOpacity>
+
+
         <PopularProducts />
       </View>
     </Provider>

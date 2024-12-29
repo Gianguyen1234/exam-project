@@ -13,7 +13,6 @@ export default function ShowScreen() {
       const screenWidth = Dimensions.get('window').width;
       setNumColumns(screenWidth < 768 ? 2 : 3);
     };
-
     // Initial setup
     updateColumns();
 

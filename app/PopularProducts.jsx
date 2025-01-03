@@ -128,8 +128,6 @@ const styles = StyleSheet.create({
     marginTop:25,
     marginVertical: 10,  // Added vertical margin for more space around the title
     textAlign: 'center',
-    fontFamily: 'Poppins',  // Use modern font
-    textTransform: 'uppercase',  // Make the text uppercase for emphasis
     letterSpacing: 1.5,  // Add letter spacing for readability
     backgroundImage: 'linear-gradient(45deg, #ff9a8b, #ffc3a0)',  // Gradient effect
     backgroundClip: 'text',  // Clip the background to text for gradient
@@ -165,7 +163,6 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontSize: 16,
-    fontFamily: 'Poppins',  // Modern font
     fontWeight: 'bold',
     marginVertical: 5,
     textAlign: 'center',

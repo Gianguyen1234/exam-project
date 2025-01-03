@@ -1,20 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Ionicons } from '@expo/vector-icons'; // Importing icon library
+import { Ionicons } from '@expo/vector-icons';
 
 const products = [
-  {
-    id: '1',
-    name: 'Modern Sofa',
-    price: '$599',
-    image: 'https://images.pexels.com/photos/133919/pexels-photo-133919.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-  },
-  { id: '2', name: 'Wooden Dining Table', price: '$299', image: 'https://images.pexels.com/photos/2092058/pexels-photo-2092058.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
-  { id: '3', name: 'Lamp Light', price: '$49', image: 'https://images.pexels.com/photos/5490911/pexels-photo-5490911.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
+  { id: '1', name: 'Modern Sofa', price: '$599', image: 'https://images.pexels.com/photos/133919/pexels-photo-133919.jpeg' },
+  { id: '2', name: 'Wooden Dining Table', price: '$299', image: 'https://images.pexels.com/photos/2092058/pexels-photo-2092058.jpeg' },
+  { id: '3', name: 'Lamp Light', price: '$49', image: 'https://images.pexels.com/photos/5490911/pexels-photo-5490911.jpeg' },
   { id: '4', name: 'Coffee Table', price: '$159', image: 'https://images.pexels.com/photos/27548805/pexels-photo-27548805/free-photo-of-a-cup-of-coffee-and-a-cookie-on-a-wooden-table.jpeg' },
-  { id: '5', name: 'Chair', price: '$89', image: 'https://images.pexels.com/photos/2082090/pexels-photo-2082090.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
-  { id: '6', name: 'Bookshelf', price: '$149', image: 'https://images.pexels.com/photos/2177482/pexels-photo-2177482.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1' },
+  { id: '5', name: 'Chair', price: '$89', image: 'https://images.pexels.com/photos/2082090/pexels-photo-2082090.jpeg' },
+  { id: '6', name: 'Bookshelf', price: '$149', image: 'https://images.pexels.com/photos/2177482/pexels-photo-2177482.jpeg' },
 ];
 
 export default function PopularProducts() {
@@ -39,8 +34,11 @@ export default function PopularProducts() {
     <View style={[styles.itemContainer, isMobile ? styles.mobileItemContainer : styles.webItemContainer]}>
       <Image source={{ uri: item.image }} style={[styles.itemImage, isMobile ? styles.mobileItemImage : styles.webItemImage]} />
       <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemPrice}>{item.price}</Text>
-      <TouchableOpacity style={styles.buyNowButton} onPress={() => router.push(`/CartScreen`)}>
+      <View style={styles.itemPriceContainer}>
+        <Ionicons name="star" size={16} color="#FFD700" />
+        <Text style={styles.itemPrice}>{item.price}</Text>
+      </View>
+      <TouchableOpacity style={styles.buyNowButton} onPress={() => router.push('/CartScreen')}>
         <Text style={styles.buyNowButtonText}>Buy Now</Text>
       </TouchableOpacity>
     </View>
@@ -49,7 +47,7 @@ export default function PopularProducts() {
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.header}>
-        <Text style={styles.title}>RENOVATE YOUR INTERIOR</Text>
+        <Text style={styles.title}>TRANSFORM YOUR SPACE</Text>
         <View style={styles.authButtons}>
           <TouchableOpacity style={styles.chatButton} onPress={() => router.push('/Chat')}>
             <Ionicons name="chatbubble-ellipses-outline" size={20} color="#fff" style={styles.buttonIcon} />
@@ -62,7 +60,7 @@ export default function PopularProducts() {
         </View>
       </View>
 
-      <Text style={styles.sectionTitle}>Popular Products</Text>
+      <Text style={styles.sectionTitle}>🌟 Popular Products</Text>
       <FlatList
         key={isMobile ? 'mobile' : 'web'}
         data={products}
@@ -88,6 +86,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 24,
+    fontFamily: 'Poppins',  // Modern font
     fontWeight: 'bold',
     color: '#333',
     marginBottom: 15,
@@ -123,24 +122,36 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   sectionTitle: {
-    fontSize: 20,
+    fontSize: 24, // Increased font size for better visibility
     fontWeight: 'bold',
     color: '#333',
-    margin: 10,
+    marginTop:25,
+    marginVertical: 10,  // Added vertical margin for more space around the title
     textAlign: 'center',
+    fontFamily: 'Poppins',  // Use modern font
+    textTransform: 'uppercase',  // Make the text uppercase for emphasis
+    letterSpacing: 1.5,  // Add letter spacing for readability
+    backgroundImage: 'linear-gradient(45deg, #ff9a8b, #ffc3a0)',  // Gradient effect
+    backgroundClip: 'text',  // Clip the background to text for gradient
+    WebkitBackgroundClip: 'text',  // For Safari browsers
+    textShadow: '2px 2px 4px rgba(0, 0, 0, 0.2)',  // Subtle text shadow for depth
   },
+  
   itemContainer: {
     margin: 10,
     backgroundColor: '#fff',
     borderRadius: 12,
     alignItems: 'center',
     padding: 10,
+    elevation: 5,  // Slight shadow to give depth
   },
   mobileItemContainer: {
     width: Dimensions.get('window').width * 0.8,
+    transition: 'transform 0.3s ease',
   },
   webItemContainer: {
     width: Dimensions.get('window').width / 3 - 30,
+    transition: 'transform 0.3s ease',
   },
   itemImage: {
     width: '100%',
@@ -154,19 +165,28 @@ const styles = StyleSheet.create({
   },
   itemName: {
     fontSize: 16,
+    fontFamily: 'Poppins',  // Modern font
     fontWeight: 'bold',
     marginVertical: 5,
     textAlign: 'center',
+    color: '#333',
+    transition: 'color 0.3s ease',
+  },
+  itemPriceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   itemPrice: {
     fontSize: 14,
     color: '#007BFF',
-    marginBottom: 10,
+    marginLeft: 5,
   },
   buyNowButton: {
     backgroundColor: '#007BFF',
     padding: 10,
     borderRadius: 20,
+    marginTop: 10,
+    transition: 'transform 0.3s ease',
   },
   buyNowButtonText: {
     color: '#fff',

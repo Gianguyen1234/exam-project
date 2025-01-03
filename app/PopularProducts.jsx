@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, FlatList, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Image, Dimensions, TouchableOpacity, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons'; // Importing icon library
 
 const products = [
   {
@@ -19,7 +20,7 @@ const products = [
 export default function PopularProducts() {
   const router = useRouter();
   const [isMobile, setIsMobile] = useState(true);
-  
+
   useEffect(() => {
     const updateLayout = () => {
       const screenWidth = Dimensions.get('window').width;
@@ -27,11 +28,10 @@ export default function PopularProducts() {
     };
 
     updateLayout();
-    const listener = Dimensions.addEventListener('change', updateLayout); // addEventListener returns a listener
+    const listener = Dimensions.addEventListener('change', updateLayout);
 
-    // Cleanup function to remove listener
     return () => {
-      listener.remove(); // Correct way to remove the listener
+      listener.remove();
     };
   }, []);
 
@@ -47,63 +47,104 @@ export default function PopularProducts() {
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Popular Products</Text>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.header}>
+        <Text style={styles.title}>RENOVATE YOUR INTERIOR</Text>
+        <View style={styles.authButtons}>
+          <TouchableOpacity style={styles.chatButton} onPress={() => router.push('/Chat')}>
+            <Ionicons name="chatbubble-ellipses-outline" size={20} color="#fff" style={styles.buttonIcon} />
+            <Text style={styles.authButtonText}>Chat</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.aboutButton} onPress={() => router.push('/AboutShop')}>
+            <Ionicons name="information-circle-outline" size={20} color="#fff" style={styles.buttonIcon} />
+            <Text style={styles.authButtonText}>About Shop</Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+
+      <Text style={styles.sectionTitle}>Popular Products</Text>
       <FlatList
         key={isMobile ? 'mobile' : 'web'}
         data={products}
         keyExtractor={(item) => item.id}
         numColumns={isMobile ? 1 : 3}
-        horizontal={isMobile} // Enable horizontal scrolling for mobile
+        horizontal={isMobile}
         showsHorizontalScrollIndicator={false}
         renderItem={renderItem}
         contentContainerStyle={isMobile ? styles.mobileContentContainer : styles.webContentContainer}
-        snapToAlignment="center"
-        snapToInterval={Dimensions.get('window').width * 0.8 + 10} // Snap each item into view
-        decelerationRate="fast" // Smooth snapping
       />
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
+  scrollContainer: {
+    flexGrow: 1,
     backgroundColor: '#f5f5f5',
-    paddingVertical: 20,
+  },
+  header: {
+    alignItems: 'center',
+    padding: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 15,
     color: '#333',
+    marginBottom: 15,
+  },
+  authButtons: {
+    flexDirection: 'row',
+    marginVertical: 10,
+  },
+  chatButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#17a2b8',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    marginHorizontal: 5,
+  },
+  aboutButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#ffc107',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 20,
+    marginHorizontal: 5,
+  },
+  authButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+    marginLeft: 5,
+  },
+  buttonIcon: {
+    marginRight: 5,
+  },
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#333',
+    margin: 10,
+    textAlign: 'center',
   },
   itemContainer: {
     margin: 10,
     backgroundColor: '#fff',
     borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 5 },
-    elevation: 5,
-    borderWidth: 1,
-    borderColor: '#ddd',
     padding: 10,
   },
   mobileItemContainer: {
-    width: Dimensions.get('window').width * 0.8, // 80% of screen width for mobile
+    width: Dimensions.get('window').width * 0.8,
   },
   webItemContainer: {
-    width: Dimensions.get('window').width / 3 - 30, // Divide screen into 3 columns with spacing
+    width: Dimensions.get('window').width / 3 - 30,
   },
   itemImage: {
     width: '100%',
-    height: 120,
-    borderTopLeftRadius: 12,
-    borderTopRightRadius: 12,
+    borderRadius: 12,
   },
   mobileItemImage: {
     height: 200,
@@ -114,7 +155,6 @@ const styles = StyleSheet.create({
   itemName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
     marginVertical: 5,
     textAlign: 'center',
   },
@@ -123,23 +163,13 @@ const styles = StyleSheet.create({
     color: '#007BFF',
     marginBottom: 10,
   },
-  mobileContentContainer: {
-    paddingLeft: 10,
-  },
-  webContentContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
   buyNowButton: {
     backgroundColor: '#007BFF',
-    borderRadius: 25,
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    marginTop: 10,
+    padding: 10,
+    borderRadius: 20,
   },
   buyNowButtonText: {
     color: '#fff',
-    fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 });

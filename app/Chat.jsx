@@ -1,38 +1,61 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet, Image, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useState, useRef } from 'react';
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  FlatList,
+  StyleSheet,
+  Image,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 
 export default function Chat() {
   const [messages, setMessages] = useState([
     { id: '1', text: 'Welcome to Renovate Your Interior! How can we help you today?', sender: 'bot' },
   ]);
   const [input, setInput] = useState('');
-  const [isTyping, setIsTyping] = useState(false); // State for typing indicator
+  const [isTyping, setIsTyping] = useState(false);
+  const flatListRef = useRef();
 
-  const sendMessage = () => {
-    if (input.trim() === '') return;
+  const predefinedQuestions = [
+    'What are your working hours?',
+    'Can you suggest furniture for a small room?',
+    'Do you provide custom designs?',
+    'What materials do you use?',
+  ];
 
-    const userMessage = { id: Date.now().toString(), text: input, sender: 'user' };
+  const predefinedAnswers = {
+    'What are your working hours?': 'Our working hours are from 9 AM to 6 PM, Monday to Saturday.',
+    'Can you suggest furniture for a small room?': 'We recommend multi-functional furniture like sofa beds or wall-mounted tables.',
+    'Do you provide custom designs?': 'Yes, we specialize in custom designs to suit your preferences.',
+    'What materials do you use?': 'We use high-quality materials such as solid wood, MDF, and engineered wood.',
+  };
+
+  const sendMessage = (text) => {
+    if (!text.trim()) return;
+
+    const userMessage = { id: Date.now().toString(), text, sender: 'user' };
     setMessages((prevMessages) => [...prevMessages, userMessage]);
 
-    // Simulate bot typing
     setIsTyping(true);
 
     setTimeout(() => {
-      const botReply = { id: (Date.now() + 1).toString(), text: 'Thank you for your message. We will get back to you soon!', sender: 'bot' };
+      const botReply = {
+        id: (Date.now() + 1).toString(),
+        text: predefinedAnswers[text] || 'Thank you for your message. We will get back to you soon!',
+        sender: 'bot',
+      };
       setMessages((prevMessages) => [...prevMessages, botReply]);
       setIsTyping(false);
     }, 1000);
-
-    setInput('');
   };
 
   const renderMessage = ({ item }) => (
     <View style={[styles.messageRow, item.sender === 'user' ? styles.userRow : styles.botRow]}>
       {item.sender === 'bot' && (
-        <Image
-          source={{ uri: 'https://i.pravatar.cc/50?u=bot' }}
-          style={styles.avatar}
-        />
+        <Image source={{ uri: 'https://i.pravatar.cc/50?u=bot' }} style={styles.avatar} />
       )}
       <View
         style={[
@@ -43,10 +66,7 @@ export default function Chat() {
         <Text style={styles.messageText}>{item.text}</Text>
       </View>
       {item.sender === 'user' && (
-        <Image
-          source={{ uri: 'https://i.pravatar.cc/50?u=user' }}
-          style={styles.avatar}
-        />
+        <Image source={{ uri: 'https://i.pravatar.cc/50?u=user' }} style={styles.avatar} />
       )}
     </View>
   );
@@ -58,12 +78,29 @@ export default function Chat() {
       keyboardVerticalOffset={90}
     >
       <FlatList
+        ref={flatListRef}
         data={isTyping ? [...messages, { id: 'typing', text: 'Bot is typing...', sender: 'bot' }] : messages}
         keyExtractor={(item) => item.id}
         renderItem={renderMessage}
         contentContainerStyle={styles.messagesList}
-        inverted
+        onContentSizeChange={() => flatListRef.current?.scrollToEnd({ animated: true })}
       />
+      <View style={styles.questionContainer}>
+        <FlatList
+          horizontal
+          data={predefinedQuestions}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.questionButton}
+              onPress={() => sendMessage(item)}
+            >
+              <Text style={styles.questionText}>{item}</Text>
+            </TouchableOpacity>
+          )}
+          showsHorizontalScrollIndicator={false}
+        />
+      </View>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.textInput}
@@ -72,7 +109,7 @@ export default function Chat() {
           value={input}
           onChangeText={setInput}
         />
-        <TouchableOpacity style={styles.sendButton} onPress={sendMessage}>
+        <TouchableOpacity style={styles.sendButton} onPress={() => sendMessage(input)}>
           <Text style={styles.sendButtonText}>Send</Text>
         </TouchableOpacity>
       </View>
@@ -119,14 +156,43 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: '#fff',
   },
-  botMessageText: {
-    color: '#333',
-  },
   avatar: {
     width: 40,
     height: 40,
     borderRadius: 20,
     marginHorizontal: 5,
+  },
+  questionContainer: {
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    backgroundColor: '#f9f9f9',
+    borderTopWidth: 1,
+    borderColor: '#ddd',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 3,
+    height: 80, // Fixed height
+  },
+  questionButton: {
+    backgroundColor: '#ffffff',
+    borderRadius: 25,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginHorizontal: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    elevation: 3,
+  },
+  questionText: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: '#333',
+    textAlign: 'center',
   },
   inputContainer: {
     flexDirection: 'row',

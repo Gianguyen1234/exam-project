@@ -4,6 +4,7 @@ import { useRouter } from 'expo-router';
 import PopularProducts from './PopularProducts';
 import { Provider } from 'react-redux';
 import store from './redux/store';
+import { Ionicons } from '@expo/vector-icons'; // Import Ionicons from Expo
 
 export default function StartScreen() {
   const router = useRouter();
@@ -31,13 +32,15 @@ export default function StartScreen() {
           <TouchableOpacity
             style={[styles.authButton, styles.loginButton]}
             onPress={() => router.push('/login')}>
-            <Text style={styles.buttonText}>Login</Text>
+            <Ionicons name="log-in-outline" size={20} color="#fff" style={styles.icon} />
+            <Text style={styles.authButtonText}>Login</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
             style={[styles.authButton, styles.registerButton]}
             onPress={() => router.push('/register')}>
-            <Text style={styles.buttonText}>Register</Text>
+            <Ionicons name="person-add-outline" size={20} color="#fff" style={styles.icon} />
+            <Text style={styles.authButtonText}>Register</Text>
           </TouchableOpacity>
         </View>
 
@@ -86,6 +89,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: '700',
+    marginLeft: 8, // Adds spacing between the icon and text
   },
   authContainer: {
     flexDirection: 'row',
@@ -99,17 +103,34 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   authButton: {
-    flex: 1,
-    marginHorizontal: 5,
-    backgroundColor: '#2ecc71',
-    borderRadius: 20,
-    paddingVertical: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginHorizontal: 10,
+    borderRadius: 25,
+    backgroundColor: '#2ecc71',
+    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
   },
   loginButton: {
     backgroundColor: '#1abc9c',
   },
   registerButton: {
     backgroundColor: '#9b59b6',
+  },
+  icon: {
+    marginRight: 8, // Space between icon and text
+  },
+  authButtonText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#fff',
+  },
+  authButtonHover: {
+    transform: 'scale(1.05)', // Hover effect for zoom
+  },
+  authButtonActive: {
+    backgroundColor: '#16a085', // Darker shade of green for active state
   },
 });

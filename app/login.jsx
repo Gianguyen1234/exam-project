@@ -12,7 +12,7 @@ export default function LoginScreen() {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('https://furniture-api-1-8h05.onrender.com/api/auth/login', {
+      const response = await fetch('https://furniture-api-i01f.onrender.com/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password }),

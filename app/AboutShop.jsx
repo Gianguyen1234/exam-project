@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: '#333',
     marginBottom: 12,
-    fontFamily: 'Roboto', // Sleek and readable
+    fontFamily: 'Roboto', 
   },
   description: {
     fontSize: 16,

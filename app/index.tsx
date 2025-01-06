@@ -1,52 +1,106 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import PopularProducts from './PopularProducts';
-import { Provider } from 'react-redux';
-import store from './redux/store';
-import { Ionicons } from '@expo/vector-icons'; // Import Ionicons from Expo
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Ionicons } from '@expo/vector-icons';
+import Toast from 'react-native-toast-message';
 
 export default function StartScreen() {
   const router = useRouter();
   const { width } = Dimensions.get('window');
+  const [loggedIn, setLoggedIn] = useState(false);
+
+  // Check auth token on component mount
+  useEffect(() => {
+    const checkAuth = async () => {
+      const token = await AsyncStorage.getItem('authToken');
+      setLoggedIn(!!token); // Set true if token exists
+    };
+    checkAuth();
+  }, []);
+
+  // Handle logout action
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('authToken');
+      setLoggedIn(false);
+      Toast.show({
+        type: 'success',
+        text1: 'Logout Successful',
+        text2: 'You have been logged out.',
+      });
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Logout Failed',
+        text2: 'An error occurred while logging out.',
+      });
+    }
+  };
 
   return (
-    <Provider store={store}>
-      <View style={styles.container}>
-        <Text style={styles.title}>Renovate Your Interior</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Renovate Your Interior</Text>
 
-        {/* Main Buttons */}
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push('/ShowScreen')}>
-          <Text style={styles.buttonText}>Go to Catalog</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.button}
-          onPress={() => router.push('/DetailScreen')}>
-          <Text style={styles.buttonText}>Go to Detail Screen</Text>
-        </TouchableOpacity>
+      {/* Main Buttons */}
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push('/ShowScreen')}>
+        <Text style={styles.buttonText}>Go to Catalog</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => router.push('/DetailScreen')}>
+        <Text style={styles.buttonText}>Go to Detail Screen</Text>
+      </TouchableOpacity>
 
-        {/* Authentication Buttons */}
-        <View style={[styles.authContainer, width < 400 ? styles.authContainerMobile : {}]}>
+      {/* Authentication Buttons */}
+      <View style={[styles.authContainer, width < 400 ? styles.authContainerMobile : {}]}>
+        {loggedIn ? (
           <TouchableOpacity
-            style={[styles.authButton, styles.loginButton]}
-            onPress={() => router.push('/login')}>
-            <Ionicons name="log-in-outline" size={20} color="#fff" style={styles.icon} />
-            <Text style={styles.authButtonText}>Login</Text>
+            style={[styles.authButton, styles.logoutButton]}
+            onPress={handleLogout}>
+            <Ionicons name="log-out-outline" size={20} color="#fff" style={styles.icon} />
+            <Text style={styles.authButtonText}>Logout</Text>
           </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[styles.authButton, styles.registerButton]}
-            onPress={() => router.push('/register')}>
-            <Ionicons name="person-add-outline" size={20} color="#fff" style={styles.icon} />
-            <Text style={styles.authButtonText}>Register</Text>
-          </TouchableOpacity>
-        </View>
-
-        <PopularProducts />
+        ) : (
+          <>
+            <TouchableOpacity
+              style={[styles.authButton, styles.loginButton]}
+              onPress={() => {
+                router.push('/login');
+                Toast.show({
+                  type: 'info',
+                  text1: 'Redirecting to Login',
+                  text2: 'Please log in to continue.',
+                });
+              }}>
+              <Ionicons name="log-in-outline" size={20} color="#fff" style={styles.icon} />
+              <Text style={styles.authButtonText}>Login</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.authButton, styles.registerButton]}
+              onPress={() => {
+                router.push('/register');
+                Toast.show({
+                  type: 'info',
+                  text1: 'Redirecting to Register',
+                  text2: 'Create a new account.',
+                });
+              }}>
+              <Ionicons name="person-add-outline" size={20} color="#fff" style={styles.icon} />
+              <Text style={styles.authButtonText}>Register</Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
-    </Provider>
+
+      <PopularProducts />
+
+      {/* Toast Component */}
+      <Toast />
+    </View>
   );
 }
 
@@ -89,7 +143,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 18,
     fontWeight: '700',
-    marginLeft: 8, // Adds spacing between the icon and text
+    marginLeft: 8,
   },
   authContainer: {
     flexDirection: 'row',
@@ -119,18 +173,15 @@ const styles = StyleSheet.create({
   registerButton: {
     backgroundColor: '#9b59b6',
   },
+  logoutButton: {
+    backgroundColor: '#e74c3c',
+  },
   icon: {
-    marginRight: 8, // Space between icon and text
+    marginRight: 8,
   },
   authButtonText: {
     fontSize: 18,
     fontWeight: '700',
     color: '#fff',
-  },
-  authButtonHover: {
-    transform: 'scale(1.05)', // Hover effect for zoom
-  },
-  authButtonActive: {
-    backgroundColor: '#16a085', // Darker shade of green for active state
   },
 });

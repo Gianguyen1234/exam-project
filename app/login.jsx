@@ -3,12 +3,12 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert, KeyboardAvo
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Toast from 'react-native-toast-message';
 
 export default function LoginScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-
 
   const handleLogin = async () => {
     try {
@@ -20,7 +20,11 @@ export default function LoginScreen() {
   
       if (!response.ok) {
         const errorData = await response.json();
-        Alert.alert('Login Failed', errorData.message || 'Invalid credentials');
+        Toast.show({
+          type: 'error',
+          text1: 'Login Failed',
+          text2: errorData.message || 'Invalid credentials',
+        });
         return;
       }
   
@@ -36,7 +40,11 @@ export default function LoginScreen() {
         router.replace('/');
       }
     } catch (error) {
-      Alert.alert('Error', 'Something went wrong. Please try again later.');
+      Toast.show({
+        type: 'error',
+        text1: 'Error',
+        text2: 'Something went wrong. Please try again later.',
+      });
     }
   };
   
@@ -79,6 +87,7 @@ export default function LoginScreen() {
           </Text>
         </View>
       </KeyboardAvoidingView>
+      <Toast />
     </LinearGradient>
   );
 }

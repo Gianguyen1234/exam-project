@@ -16,3 +16,4 @@ const updateQuantity = (item, isIncrement) => {
     text1: `${item.name} quantity updated to ${newQuantity}`,
   });
 };
+

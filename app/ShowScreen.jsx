@@ -7,6 +7,8 @@ export default function ShowScreen() {
   const [products, setProducts] = useState([]);
   const [numColumns, setNumColumns] = useState(2); // Default to 2 columns
   const router = useRouter();  // Use the router from expo-router
+  // New state for categories
+  const [categories, setCategories] = useState([]);
 
   useEffect(() => {
     const updateColumns = () => {
@@ -25,9 +27,13 @@ export default function ShowScreen() {
 
   // Fetch products from MockAPI
   useEffect(() => {
-    axios.get('https://6724468e493fac3cf24db97b.mockapi.io/products')
+    axios.get('https://furniture-api-i01f.onrender.com/api/products')
       .then(response => {
         setProducts(response.data);
+  
+        // Extract unique categories from products
+        const uniqueCategories = [...new Set(response.data.map(product => product.category))];
+        setCategories(uniqueCategories);
       })
       .catch(error => {
         console.error('Error fetching products:', error);
@@ -47,12 +53,13 @@ export default function ShowScreen() {
       <Text style={styles.title}>Discovery Products</Text>
 
       <View style={styles.categoriesContainer}>
-        {['Sofas', 'Chairs', 'Tables', 'Kitchen'].map((category, index) => (
-          <TouchableOpacity key={index} style={styles.categoryButton}>
-            <Text style={styles.categoryText}>{category}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+  {categories.map((category, index) => (
+    <TouchableOpacity key={index} style={styles.categoryButton}>
+      <Text style={styles.categoryText}>{category}</Text>
+    </TouchableOpacity>
+  ))}
+</View>
+
 
       <FlatList
         data={products}
@@ -64,7 +71,7 @@ export default function ShowScreen() {
             <View style={styles.discountBadge}>
               <Text style={styles.discountText}>20% OFF</Text>
             </View>
-            <Image source={{ uri: item.imageUrl }} style={styles.productImage} />
+            <Image source={{ uri: item.images?.[0]  }} style={styles.productImage} />
             <Text style={styles.productName}>{item.name}</Text>
             <Text style={styles.productPrice}>${item.price}</Text>
             <TouchableOpacity style={styles.buyButton} onPress={() => handleBuyNow(item.name)}>

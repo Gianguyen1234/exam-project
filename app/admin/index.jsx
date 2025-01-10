@@ -1,26 +1,11 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useRouter } from 'expo-router';
+import { View, Text, StyleSheet } from 'react-native';
 
-export default function AdminPage() {
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      await AsyncStorage.removeItem('authToken');
-      router.replace('/login');
-    } catch (error) {
-      console.error('Error clearing token:', error);
-    }
-  };
-
+export default function AdminDashboard() {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Welcome Admin</Text>
-      <TouchableOpacity style={styles.button} onPress={handleLogout}>
-        <Text style={styles.buttonText}>Logout</Text>
-      </TouchableOpacity>
+      <Text style={styles.title}>Welcome to the Admin Dashboard</Text>
+      <Text style={styles.subtitle}>Use the sidebar to manage products and settings.</Text>
     </View>
   );
 }
@@ -33,18 +18,13 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: 'bold',
-    marginBottom: 20,
+    marginBottom: 10,
   },
-  button: {
-    backgroundColor: '#e74c3c',
-    padding: 15,
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#fff',
+  subtitle: {
     fontSize: 16,
-    fontWeight: 'bold',
+    color: '#7f8c8d',
+    textAlign: 'center',
   },
 });

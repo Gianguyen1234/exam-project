@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator, Dimensions, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useRouter, Slot } from 'expo-router';
 import { FontAwesome } from '@expo/vector-icons';
 
 export default function AdminLayout() {
-  const [isProductDropdownOpen, setIsProductDropdownOpen] = useState(false);
+  const [dropdownStates, setDropdownStates] = useState({}); // Manage all dropdown states
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false); // Detect mobile layout
+  const [isMobile, setIsMobile] = useState(false);
+  const [isLogoutModalVisible, setIsLogoutModalVisible] = useState(false);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -27,30 +29,34 @@ export default function AdminLayout() {
         setLoading(false);
       }
     };
-  
+
     checkAuthToken();
-  
-    // Detect screen size
+
     const updateLayout = () => {
       const width = Dimensions.get('window').width;
-      setIsMobile(width < 768); // Mobile threshold
+      setIsMobile(width < 768);
     };
-  
-    // Initial check and listener for screen size changes
+
     updateLayout();
     const dimensionListener = Dimensions.addEventListener('change', updateLayout);
-  
-    // Cleanup event listener
+
     return () => {
       if (dimensionListener) {
-        dimensionListener.remove(); // Updated to remove the listener properly
+        dimensionListener.remove();
       }
     };
   }, []);
-  
 
   const navigateTo = (path) => {
     router.push(path);
+  };
+
+  // Reusable toggle function
+  const toggleItemDropdown = (item) => {
+    setDropdownStates((prev) => ({
+      ...prev,
+      [item]: !prev[item],
+    }));
   };
 
   const handleLogout = async () => {
@@ -60,15 +66,9 @@ export default function AdminLayout() {
       router.replace('/login');
     } catch (error) {
       console.error('Error during logout:', error);
+    } finally {
+      setIsLogoutModalVisible(false);
     }
-  };
-
-  const toggleProductDropdown = () => {
-    setIsProductDropdownOpen(!isProductDropdownOpen);
-  };
-
-  const toggleSidebar = () => {
-    setIsSidebarOpen(!isSidebarOpen);
   };
 
   if (loading) {
@@ -80,19 +80,43 @@ export default function AdminLayout() {
   }
 
   if (!isAuthenticated) {
-    return null; // Redirecting, so no need to render layout
+    return null;
   }
 
   return (
     <View style={styles.container}>
+      {/* Logout Modal */}
+      <Modal
+        visible={isLogoutModalVisible}
+        transparent
+        animationType="slide"
+        onRequestClose={() => setIsLogoutModalVisible(false)}
+      >
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalText}>Are you sure you want to logout?</Text>
+            <View style={styles.modalButtons}>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.cancelButton]}
+                onPress={() => setIsLogoutModalVisible(false)}
+              >
+                <Text style={styles.modalButtonText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.modalButton, styles.confirmButton]}
+                onPress={handleLogout}
+              >
+                <Text style={styles.modalButtonText}>Logout</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
+      </Modal>
+
       {/* Toggle Button for Sidebar on Mobile */}
       {isMobile && (
-        <TouchableOpacity style={styles.sidebarToggle} onPress={toggleSidebar}>
-          <FontAwesome 
-            name={isSidebarOpen ? 'times' : 'bars'} 
-            size={24} 
-            color="#fff" 
-          />
+        <TouchableOpacity style={styles.sidebarToggle} onPress={() => setIsSidebarOpen(!isSidebarOpen)}>
+          <FontAwesome name={isSidebarOpen ? 'times' : 'bars'} size={24} color="#fff" />
         </TouchableOpacity>
       )}
 
@@ -103,10 +127,13 @@ export default function AdminLayout() {
 
           {/* Product Dropdown */}
           <View style={styles.dropdownContainer}>
-            <TouchableOpacity style={styles.sidebarItem} onPress={toggleProductDropdown}>
+            <TouchableOpacity
+              style={styles.sidebarItem}
+              onPress={() => toggleItemDropdown('Product')}
+            >
               <Text style={styles.sidebarText}>Product</Text>
             </TouchableOpacity>
-            {isProductDropdownOpen && (
+            {dropdownStates['Product'] && (
               <View style={styles.dropdownMenu}>
                 <TouchableOpacity
                   style={styles.dropdownItem}
@@ -124,8 +151,37 @@ export default function AdminLayout() {
             )}
           </View>
 
+          {/* Category Dropdown */}
+          <View style={styles.dropdownContainer}>
+            <TouchableOpacity
+              style={styles.sidebarItem}
+              onPress={() => toggleItemDropdown('Category')}
+            >
+              <Text style={styles.sidebarText}>Category</Text>
+            </TouchableOpacity>
+            {dropdownStates['Category'] && (
+              <View style={styles.dropdownMenu}>
+                <TouchableOpacity
+                  style={styles.dropdownItem}
+                  onPress={() => navigateTo('/admin/category/create')}
+                >
+                  <Text style={styles.dropdownText}>Create Category</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.dropdownItem}
+                  onPress={() => navigateTo('/admin/category/list')}
+                >
+                  <Text style={styles.dropdownText}>Category List</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+          </View>
+
           {/* Logout */}
-          <TouchableOpacity style={styles.sidebarItem} onPress={handleLogout}>
+          <TouchableOpacity
+            style={styles.sidebarItem}
+            onPress={() => setIsLogoutModalVisible(true)}
+          >
             <Text style={styles.sidebarText}>Logout</Text>
           </TouchableOpacity>
         </View>
@@ -133,7 +189,7 @@ export default function AdminLayout() {
 
       {/* Main Content */}
       <View style={styles.mainContent}>
-        <Slot /> {/* This is where the child pages will be rendered */}
+        <Slot />
       </View>
     </View>
   );
@@ -213,5 +269,46 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     zIndex: 2, // Ensures the button is above the sidebar
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 20,
+    alignItems: 'center',
+  },
+  modalText: {
+    fontSize: 18,
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  modalButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+  },
+  modalButton: {
+    flex: 1,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  cancelButton: {
+    backgroundColor: '#e74c3c',
+    marginRight: 10,
+  },
+  confirmButton: {
+    backgroundColor: '#1abc9c',
+  },
+  modalButtonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });

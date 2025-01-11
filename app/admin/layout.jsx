@@ -177,6 +177,32 @@ export default function AdminLayout() {
             )}
           </View>
 
+          {/* User Dropdown */}
+<View style={styles.dropdownContainer}>
+  <TouchableOpacity
+    style={styles.sidebarItem}
+    onPress={() => toggleItemDropdown('User')}
+  >
+    <Text style={styles.sidebarText}>User</Text>
+  </TouchableOpacity>
+  {dropdownStates['User'] && (
+    <View style={styles.dropdownMenu}>
+      <TouchableOpacity
+        style={styles.dropdownItem}
+        onPress={() => navigateTo('/admin/users/create')}
+      >
+        <Text style={styles.dropdownText}>Create User</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.dropdownItem}
+        onPress={() => navigateTo('/admin/users/list')}
+      >
+        <Text style={styles.dropdownText}>User List</Text>
+      </TouchableOpacity>
+    </View>
+  )}
+</View>
+
           {/* Logout */}
           <TouchableOpacity
             style={styles.sidebarItem}

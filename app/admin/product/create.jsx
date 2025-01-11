@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Picker } from 'react-native';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Toast from 'react-native-toast-message';
@@ -15,9 +15,31 @@ export default function CreateProductPage() {
     images: '',
   });
 
+  const [categories, setCategories] = useState([]); // State to store categories
+  const [loadingCategories, setLoadingCategories] = useState(true); // State to manage loading
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('https://furniture-api-i01f.onrender.com/api/categories');
+        setCategories(response.data); // Assuming the API returns a list of categories
+        setLoadingCategories(false);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        Toast.show({
+          type: 'error',
+          text1: 'Error',
+          text2: 'Failed to fetch categories.',
+        });
+        setLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
   const handleCreateProduct = async () => {
     try {
-      // Retrieve token from AsyncStorage for authentication
       const token = await AsyncStorage.getItem('authToken');
 
       if (!token) {
@@ -29,7 +51,6 @@ export default function CreateProductPage() {
         return;
       }
 
-      // Send POST request to create product
       const response = await axios.post(
         'https://furniture-api-i01f.onrender.com/api/products',
         {
@@ -40,12 +61,11 @@ export default function CreateProductPage() {
         },
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Attach token to the request
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      // Success message
       Toast.show({
         type: 'success',
         text1: 'Success',
@@ -65,7 +85,6 @@ export default function CreateProductPage() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Create New Product</Text>
-      {/* Form Fields */}
       <TextInput
         style={styles.input}
         placeholder="Product Name"
@@ -85,12 +104,20 @@ export default function CreateProductPage() {
         keyboardType="numeric"
         onChangeText={(text) => setForm({ ...form, price: text })}
       />
-      <TextInput
-        style={styles.input}
-        placeholder="Category"
-        value={form.category}
-        onChangeText={(text) => setForm({ ...form, category: text })}
-      />
+      {loadingCategories ? (
+        <Text>Loading categories...</Text>
+      ) : (
+        <Picker
+          selectedValue={form.category}
+          style={styles.input}
+          onValueChange={(itemValue) => setForm({ ...form, category: itemValue })}
+        >
+          <Picker.Item label="Select a category" value="" />
+          {categories.map((cat) => (
+            <Picker.Item key={cat._id} label={cat.name} value={cat.name} />
+          ))}
+        </Picker>
+      )}
       <TextInput
         style={styles.input}
         placeholder="Brand (optional)"
@@ -110,13 +137,9 @@ export default function CreateProductPage() {
         value={form.images}
         onChangeText={(text) => setForm({ ...form, images: text })}
       />
-
-      {/* Submit Button */}
       <TouchableOpacity style={styles.button} onPress={handleCreateProduct}>
         <Text style={styles.buttonText}>Create Product</Text>
       </TouchableOpacity>
-
-      {/* Toast Component */}
       <Toast />
     </View>
   );

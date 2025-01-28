@@ -20,6 +20,8 @@ export default function ProductListPage() {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [productToDelete, setProductToDelete] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1); // Current page state
+  const productsPerPage = 10; // Number of products per page
   const router = useRouter();
 
   useEffect(() => {
@@ -63,7 +65,6 @@ export default function ProductListPage() {
         text2: 'Product deleted successfully!',
       });
 
-      // Remove the product from the list
       setProducts((prevProducts) =>
         prevProducts.filter((product) => product._id !== productId)
       );
@@ -88,6 +89,24 @@ export default function ProductListPage() {
     setShowModal(true);
   };
 
+  // Pagination logic
+  const indexOfLastProduct = currentPage * productsPerPage;
+  const indexOfFirstProduct = indexOfLastProduct - productsPerPage;
+  const currentProducts = products.slice(indexOfFirstProduct, indexOfLastProduct);
+  const totalPages = Math.ceil(products.length / productsPerPage);
+
+  const handleNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Product List</Text>
@@ -97,36 +116,60 @@ export default function ProductListPage() {
       ) : products.length === 0 ? (
         <Text style={styles.noProducts}>No products available.</Text>
       ) : (
-        <FlatList
-          data={products}
-          keyExtractor={(item) => item._id}
-          renderItem={({ item }) => (
-            <View style={styles.productContainer}>
-              <Image
-                source={{ uri: item.images?.[0] || 'https://via.placeholder.com/150' }}
-                style={styles.productImage}
-              />
-              <View style={styles.productDetails}>
-                <Text style={styles.productName}>{item.name}</Text>
-                <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
-                <View style={styles.actions}>
-                  <TouchableOpacity
-                    style={[styles.button, styles.editButton]}
-                    onPress={() => handleEditProduct(item._id)}
-                  >
-                    <Text style={styles.buttonText}>Edit</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    style={[styles.button, styles.deleteButton]}
-                    onPress={() => openDeleteModal(item._id)}
-                  >
-                    <Text style={styles.buttonText}>Delete</Text>
-                  </TouchableOpacity>
+        <>
+          <FlatList
+            data={currentProducts} // Display only the products for the current page
+            keyExtractor={(item) => item._id}
+            renderItem={({ item }) => (
+              <View style={styles.productContainer}>
+                <Image
+                  source={{
+                    uri: item.images?.[0] || 'https://via.placeholder.com/150',
+                  }}
+                  style={styles.productImage}
+                />
+                <View style={styles.productDetails}>
+                  <Text style={styles.productName}>{item.name}</Text>
+                  <Text style={styles.productPrice}>${item.price.toFixed(2)}</Text>
+                  <View style={styles.actions}>
+                    <TouchableOpacity
+                      style={[styles.button, styles.editButton]}
+                      onPress={() => handleEditProduct(item._id)}
+                    >
+                      <Text style={styles.buttonText}>Edit</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={[styles.button, styles.deleteButton]}
+                      onPress={() => openDeleteModal(item._id)}
+                    >
+                      <Text style={styles.buttonText}>Delete</Text>
+                    </TouchableOpacity>
+                  </View>
                 </View>
               </View>
-            </View>
-          )}
-        />
+            )}
+          />
+          {/* Pagination Controls */}
+          <View style={styles.pagination}>
+            <TouchableOpacity
+              style={[styles.pageButton, currentPage === 1 && styles.disabledButton]}
+              onPress={handlePreviousPage}
+              disabled={currentPage === 1}
+            >
+              <Text style={styles.pageButtonText}>Previous</Text>
+            </TouchableOpacity>
+            <Text style={styles.pageInfo}>
+              Page {currentPage} of {totalPages}
+            </Text>
+            <TouchableOpacity
+              style={[styles.pageButton, currentPage === totalPages && styles.disabledButton]}
+              onPress={handleNextPage}
+              disabled={currentPage === totalPages}
+            >
+              <Text style={styles.pageButtonText}>Next</Text>
+            </TouchableOpacity>
+          </View>
+        </>
       )}
 
       {/* Delete Confirmation Modal */}
@@ -246,5 +289,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 20,
+  },
+  pagination: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginVertical: 20,
+  },
+  pageButton: {
+    padding: 10,
+    backgroundColor: '#3498db',
+    borderRadius: 5,
+  },
+  disabledButton: {
+    backgroundColor: '#ccc',
+  },
+  pageButtonText: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  pageInfo: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#555',
   },
 });

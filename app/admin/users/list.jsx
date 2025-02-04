@@ -13,7 +13,6 @@ export default function ListUsersPage() {
   const fetchUsers = async () => {
     try {
       const token = await AsyncStorage.getItem('authToken');
-
       if (!token) {
         Toast.show({
           type: 'error',
@@ -22,7 +21,6 @@ export default function ListUsersPage() {
         });
         return;
       }
-
       const response = await axios.get(
         'https://furniture-api-i01f.onrender.com/api/auth/users',
         {

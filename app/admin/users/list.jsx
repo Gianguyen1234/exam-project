@@ -31,7 +31,6 @@ export default function ListUsersPage() {
           },
         }
       );
-
       setUsers(response.data.users); // Assuming the response has a `users` field
     } catch (error) {
       console.error('Error fetching users:', error.response?.data || error.message);
@@ -53,7 +52,6 @@ export default function ListUsersPage() {
   const indexOfLastUser = currentPage * usersPerPage;
   const indexOfFirstUser = indexOfLastUser - usersPerPage;
   const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser); // Slice users array for current page
-
   const totalPages = Math.ceil(users.length / usersPerPage); // Calculate total pages
 
   const renderUser = ({ item }) => (
@@ -75,7 +73,6 @@ export default function ListUsersPage() {
       setCurrentPage(currentPage - 1);
     }
   };
-
   if (loading) {
     return (
       <View style={styles.loadingContainer}>
@@ -84,7 +81,6 @@ export default function ListUsersPage() {
       </View>
     );
   }
-
   return (
     <View style={styles.container}>
       <Text style={styles.title}>User List</Text>
